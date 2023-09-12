@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Volume Leveler",
   "version": "0.0.1",
-  "action": { "default_popup": "index.html" },
+  "action": { "default_popup": "src/popup/index.html" },
   "content_scripts": [
     {
       "js": ["src/content/content.ts"],
