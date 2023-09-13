@@ -1,26 +1,17 @@
+import { observer } from 'mobx-react-lite';
 import './App.css'
-
-interface Message {
-  message: string;
-}
-
-const messageAllTabs = async (message: Message) => {
-  const tabs = await chrome.tabs.query({});
-  return Promise.all(tabs.map(tab => chrome.tabs.sendMessage(tab.id!, message)))
-}
+import { useStore } from '../common/store/useStore';
 
 
-function App() {
+const App = observer(() => {
+  const root = useStore();
 
-  const activate = () => {
-    messageAllTabs({message: 'activate'});
-  }
 
   return (
     <div>
-      <button onClick={activate}>send message</button>
+      <button onClick={() => {}}>{root.displayableState}</button>
     </div>
   )
-}
+})
 
 export default App
