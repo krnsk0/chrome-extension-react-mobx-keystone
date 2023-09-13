@@ -1,5 +1,6 @@
 import { model, Model, modelAction, tProp, types } from 'mobx-keystone';
 import { computed } from 'mobx';
+import {assertUnreachable} from './assertUnreachable';
 
 export enum CompressorStates {
   DISABLED = 'DISABLED',
@@ -8,21 +9,18 @@ export enum CompressorStates {
   FAILED = 'FAILED',
 }
 
-// eslint-disable-next-line
-function assertUnreachable(_x: never): never {
-  throw new Error("Didn't expect to get here");
-}
+
 
 @model('Root')
 export class Root extends Model({
-  state: tProp(
+  compressorState: tProp(
     types.enum(CompressorStates),
     CompressorStates.DISABLED
   ),
 }) {
   @computed
   get displayableState(): string {
-    switch (this.state) {
+    switch (this.compressorState) {
       case CompressorStates.DISABLED:
         return 'Disabled';
       case CompressorStates.ENABLING:
@@ -32,33 +30,38 @@ export class Root extends Model({
       case CompressorStates.FAILED:
         return 'Failed';
       default:
-        return assertUnreachable(this.state);
+        return assertUnreachable(this.compressorState);
     }
   }
-
-
 
   /**
    * Intended to be called by the UI to toggle the state of the * compressor for a tab.
    */
   @modelAction
   toggleActivation(): void {
-    switch (this.state) {
+    switch (this.compressorState) {
       case CompressorStates.DISABLED:
-        this.state = CompressorStates.ENABLING;
+        this.compressorState = CompressorStates.ENABLING;
         break;
       case CompressorStates.ENABLING:
-        this.state = CompressorStates.DISABLED;
+        this.compressorState = CompressorStates.DISABLED;
         break;
       case CompressorStates.ACTIVE:
-        this.state = CompressorStates.DISABLED;
+        this.compressorState = CompressorStates.DISABLED;
         break;
       case CompressorStates.FAILED:
-        this.state = CompressorStates.DISABLED;
+        this.compressorState = CompressorStates.DISABLED;
         break;
       default:
-        assertUnreachable(this.state);
+        assertUnreachable(this.compressorState);
     }
+  }
 
+  /**
+   * To be called when the compressor successfully activates.
+   */
+  @modelAction
+  compressorActivated(): void {
+    this.compressorState = CompressorStates.ACTIVE;
   }
 }
