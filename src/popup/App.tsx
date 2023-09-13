@@ -9,7 +9,7 @@ const App = observer(() => {
 
   return (
     <div>
-      <button onClick={() => {}}>{root.displayableState}</button>
+      <button onClick={() => root.toggleActivation()}>{root.displayableState}</button>
     </div>
   )
 })

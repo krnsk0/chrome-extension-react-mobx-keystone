@@ -18,7 +18,7 @@ export class Root extends Model({
   state: tProp(
     types.enum(CompressorStates),
     CompressorStates.DISABLED
-  ).withSetter(),
+  ),
 }) {
   @computed
   get displayableState(): string {
@@ -34,11 +34,31 @@ export class Root extends Model({
       default:
         return assertUnreachable(this.state);
     }
-
   }
 
 
 
+  /**
+   * Intended to be called by the UI to toggle the state of the * compressor for a tab.
+   */
   @modelAction
-  reset(): void {}
+  toggleActivation(): void {
+    switch (this.state) {
+      case CompressorStates.DISABLED:
+        this.state = CompressorStates.ENABLING;
+        break;
+      case CompressorStates.ENABLING:
+        this.state = CompressorStates.DISABLED;
+        break;
+      case CompressorStates.ACTIVE:
+        this.state = CompressorStates.DISABLED;
+        break;
+      case CompressorStates.FAILED:
+        this.state = CompressorStates.DISABLED;
+        break;
+      default:
+        assertUnreachable(this.state);
+    }
+
+  }
 }
