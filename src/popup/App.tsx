@@ -13,7 +13,7 @@ const messageAllTabs = async (message: Message) => {
 function App() {
 
   const activate = () => {
-    messageAllTabs({message: 'hello'});
+    messageAllTabs({message: 'activate'});
   }
 
   return (

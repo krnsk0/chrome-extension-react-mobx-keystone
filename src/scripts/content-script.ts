@@ -1,8 +1,12 @@
-console.log('IN CONTENT SCRIPT; ADDING LISTENER');
+import { activate } from "./activate";
+
+console.log('CONTENT SCRIPT ACTIVE');
 
 chrome.runtime.onMessage.addListener(function (request, sender) {
   // this is a message from popup
   if (!sender.tab) {
-    console.log(request);
+    if (request.message === 'activate') {
+      activate()
+    }
   }
 });
