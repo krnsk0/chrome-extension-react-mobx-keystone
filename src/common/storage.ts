@@ -1,47 +1,62 @@
-import { applySnapshot, onSnapshot } from 'mobx-keystone';
+import { applySnapshot, getSnapshot, onSnapshot } from 'mobx-keystone';
 import { Root } from './store/root';
+import { isObject } from './utils/isObject';
+
+const ROOT_KEY = 'ROOT_KEY'
 
 const writeStorage = async (newState: unknown) => {
-  return chrome.storage.local.set({ state: newState });
+  return chrome.storage.local.set({ [ROOT_KEY]: newState });
 };
 
-const readStorage = async <T>(): Promise<T> => {
-  return chrome.storage.local.get(['key']) as unknown as T;
+const readStorage = async (): Promise<unknown> => {
+  const storageValue = chrome.storage.local.get([ROOT_KEY]) as unknown;
+  if (isObject(storageValue) && ROOT_KEY in storageValue) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (storageValue as any).root
+  } else return {}
 };
+
+
 
 
 /**
  * Syncs keystone store with chrome storage
  */
-export const startStoreSync = (
-  root: Root, options:
-  { fetchOnStart: boolean } = { fetchOnStart: true }
-) => {
-  // store -> storage
-  const disposer = onSnapshot(root, (snapshot) => {
-    writeStorage(snapshot);
-  });
-
+export const startStoreSync = async (root: Root): Promise<() => void> => {
   // storage -> store
   const storageChangeHandler = (changes: {
     [key: string]: chrome.storage.StorageChange;
   }) => {
-    const snapshot = changes.state.newValue;
+    const snapshot = changes[ROOT_KEY].newValue;
+    console.log('change handler: ', snapshot);
+
     applySnapshot(root, snapshot);
   };
   chrome.storage.onChanged.addListener(storageChangeHandler);
 
-  if (options.fetchOnStart) {
+  return new Promise((resolve) => {
     readStorage().then((snapshot) => {
-      console.log('snapshot: ', snapshot);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      applySnapshot(root, snapshot as any);
-    });
-  }
+      console.log('applying snapshot: ', snapshot);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        applySnapshot(root, snapshot as any);
+      console.log('root: ', getSnapshot(root));
 
-  // cleanup sync
-  return () => {
-    disposer();
-    chrome.storage.onChanged.removeListener(storageChangeHandler);
-  };
+
+      // store -> storage
+      const disposer = onSnapshot(root, (snapshot) => {
+        writeStorage(snapshot);
+      });
+
+      // sync back
+      writeStorage(snapshot);
+
+      // disposer
+      const cleanup = () => {
+        disposer();
+        chrome.storage.onChanged.removeListener(storageChangeHandler);
+      };
+
+      resolve(cleanup);
+    });
+  });
 };

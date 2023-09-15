@@ -26,7 +26,11 @@ export const StoreProvider = ({
   children,
 }: React.PropsWithChildren<Record<string, unknown>>) => {
   useEffect(() => {
-    return startStoreSync(root);
+    let cleanup: () => void = () => {};
+    (async () => {
+      cleanup = await startStoreSync(root);
+    })();
+    return cleanup;
   }, []);
 
   return <StoreContext.Provider value={root}>{children}</StoreContext.Provider>;
