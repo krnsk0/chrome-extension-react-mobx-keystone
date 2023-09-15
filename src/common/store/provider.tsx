@@ -1,13 +1,11 @@
 import {
   ModelAutoTypeCheckingMode,
-  applySnapshot,
-  onSnapshot,
   registerRootStore,
   setGlobalConfig,
 } from 'mobx-keystone';
 import React, { useEffect } from 'react';
 import { Root } from './root';
-import { writeStorage } from '../storage';
+import { startStoreSync } from '../storage';
 
 setGlobalConfig({
   modelAutoTypeChecking: ModelAutoTypeCheckingMode.AlwaysOn,
@@ -24,34 +22,12 @@ registerRootStore(root);
 
 export const StoreContext = React.createContext<Root>(root);
 
-
 export const StoreProvider = ({
   children,
 }: React.PropsWithChildren<Record<string, unknown>>) => {
-
-
   useEffect(() => {
-    const disposer = onSnapshot(root, (snapshot) => {
-      writeStorage(snapshot).then(() => {
-        console.log('snapshot saved')
-      })
-    })
-
-    const storageChangeHandler = (changes: { [key: string]: chrome.storage.StorageChange; }) => {
-      const snapshot = changes.state.newValue
-      applySnapshot(root, snapshot)
-    }
-
-    chrome.storage.onChanged.addListener(storageChangeHandler)
-
-    return () => {
-      disposer()
-      chrome.storage.onChanged.removeListener(storageChangeHandler)
-    }
-  }, [])
-
-
-
+    return startStoreSync(root);
+  }, []);
 
   return <StoreContext.Provider value={root}>{children}</StoreContext.Provider>;
 };

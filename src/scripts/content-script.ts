@@ -1,8 +1,8 @@
 import { applySnapshot, onSnapshot } from "mobx-keystone";
 import { CompressorStates, Root } from "../common/store/root";
 import { reaction } from "mobx";
-import { writeStorage } from "../common/storage";
 import { assertUnreachable } from "../common/utils/assertUnreachable";
+import { startStoreSync } from "../common/storage";
 
 console.log('CONTENT SCRIPT ACTIVE');
 
@@ -12,17 +12,7 @@ const root = new Root({});
 // TODO: disable in production
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (window as any)._keystone_root = root;
-
-chrome.storage.onChanged.addListener((value) => {
-  const snapshot = value.state.newValue
-  applySnapshot(root, snapshot)
-})
-
-
-onSnapshot(root, (snapshot) => {
-  writeStorage(snapshot).then(() => {
-  })
-})
+startStoreSync(root);
 
 reaction(() => root.compressorState, (compressorState) => {
   switch (compressorState) {
