@@ -34,4 +34,4 @@ reaction(() => root.compressorState, (compressorState) => {
     default:
       assertUnreachable(compressorState);
   }
-})
+}, { fireImmediately: true })

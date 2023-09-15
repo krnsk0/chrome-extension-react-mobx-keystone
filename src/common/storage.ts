@@ -9,13 +9,17 @@ const readStorage = async <T>(): Promise<T> => {
   return chrome.storage.local.get(['key']) as unknown as T;
 };
 
+
 /**
  * Syncs keystone store with chrome storage
  */
-export const startStoreSync = (root: Root) => {
+export const startStoreSync = (
+  root: Root, options:
+  { fetchOnStart: boolean } = { fetchOnStart: true }
+) => {
   // store -> storage
   const disposer = onSnapshot(root, (snapshot) => {
-    writeStorage(snapshot)
+    writeStorage(snapshot);
   });
 
   // storage -> store
@@ -26,6 +30,14 @@ export const startStoreSync = (root: Root) => {
     applySnapshot(root, snapshot);
   };
   chrome.storage.onChanged.addListener(storageChangeHandler);
+
+  if (options.fetchOnStart) {
+    readStorage().then((snapshot) => {
+      console.log('snapshot: ', snapshot);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      applySnapshot(root, snapshot as any);
+    });
+  }
 
   // cleanup sync
   return () => {
