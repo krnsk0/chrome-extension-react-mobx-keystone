@@ -1,6 +1,6 @@
 import { model, Model, modelAction, tProp, types } from 'mobx-keystone';
 import { computed } from 'mobx';
-import {assertUnreachable} from './assertUnreachable';
+import {assertUnreachable} from '../utils/assertUnreachable';
 
 export enum CompressorStates {
   DISABLED = 'DISABLED',

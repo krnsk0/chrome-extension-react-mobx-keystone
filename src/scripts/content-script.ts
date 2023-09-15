@@ -2,7 +2,7 @@ import { applySnapshot, onSnapshot } from "mobx-keystone";
 import { CompressorStates, Root } from "../common/store/root";
 import { reaction } from "mobx";
 import { writeStorage } from "../common/storage";
-import { assertUnreachable } from "../common/store/assertUnreachable";
+import { assertUnreachable } from "../common/utils/assertUnreachable";
 
 console.log('CONTENT SCRIPT ACTIVE');
 
