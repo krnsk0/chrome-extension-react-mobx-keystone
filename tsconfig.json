@@ -22,7 +22,7 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Types */
-    "types": ["vitest/importMeta"]
+    "types": ["vitest/importMeta", "chrome"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
