@@ -1,10 +1,9 @@
 import { applySnapshot, getSnapshot, onSnapshot } from 'mobx-keystone';
 import { Root } from './store/root';
 import { isObject } from './utils/isObject';
+import { logger } from './utils/debugLogger';
 
 const ROOT_KEY = 'ROOT_KEY';
-
-
 
 const writeStorage = async (newState: unknown) => {
   return chrome.storage.local.set({ [ROOT_KEY]: newState });
