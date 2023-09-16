@@ -2,9 +2,9 @@ import { CompressorStates, Root } from '../common/store/root';
 import { reaction } from 'mobx';
 import { assertUnreachable } from '../common/utils/assertUnreachable';
 import { startStoreSync } from '../common/storage';
-import { createLogger } from '../common/utils/debugLogger';
+import { makeLogger } from '../common/utils/makeLogger';
 
-const logger = createLogger('content-script');
+const logger = makeLogger('content-script');
 logger.log('starting')
 
 const root = new Root({});
