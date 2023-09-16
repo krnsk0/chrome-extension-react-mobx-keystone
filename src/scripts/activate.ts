@@ -1,5 +1,5 @@
-import { findAllSources } from "./findAllSources";
+import { findMediaElements } from "./findMediaElements";
 
 export const activate = () => {
-    console.log('ACTIVATING', findAllSources());
+    console.log('ACTIVATING', findMediaElements());
 }
