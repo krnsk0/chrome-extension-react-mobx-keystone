@@ -1,9 +1,11 @@
 import { applySnapshot, getSnapshot, onSnapshot } from 'mobx-keystone';
 import { Root } from './store/root';
 import { isObject } from './utils/isObject';
-import { logger } from './utils/debugLogger';
+import { createLogger } from './utils/debugLogger';
 
 const ROOT_KEY = 'ROOT_KEY';
+
+const logger = createLogger('storage');
 
 const writeStorage = async (newState: unknown) => {
   return chrome.storage.local.set({ [ROOT_KEY]: newState });
@@ -16,19 +18,20 @@ const readStorage = async (): Promise<unknown> => {
     const newRoot = (storageValue as any)[ROOT_KEY];
     return newRoot;
   } else {
-    logger('readStorage::no ROOT_KEY in storage, returning empty object');
+    logger.fork('readStorage').log('no ROOT_KEY in storage, returning empty object');
     return {};
   }
 };
 
 export const startStoreSync = async (root: Root): Promise<() => void> => {
-  logger('startStoreSync');
+  const childLogger = logger.fork('startStoreSync');
+  childLogger.log('starting sync')
   const initialValue = await readStorage();
   applySnapshot(root, initialValue as Root);
-  logger('startStoreSync::store after initialization', getSnapshot(root));
+  childLogger.log('store after initialization', getSnapshot(root));
 
   const disposer = onSnapshot(root, (snapshot) => {
-    logger('startStoreSync::keystore -> storage', snapshot);
+    childLogger.fork('startStoreSync').log('keystone -> storage', snapshot);
     writeStorage(snapshot);
   });
 
@@ -36,7 +39,7 @@ export const startStoreSync = async (root: Root): Promise<() => void> => {
     [key: string]: chrome.storage.StorageChange;
   }) => {
     const newSnapshot = changes[ROOT_KEY].newValue;
-    logger('startStoreSync::handleStorageUpdate', newSnapshot);
+    childLogger.fork('handleStorageUpdate').log('storage -> keystone', newSnapshot);
     applySnapshot(root, newSnapshot);
   };
   chrome.storage.onChanged.addListener(handleStorageUpdate);
