@@ -7,9 +7,6 @@ import manifest from './manifest.json';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react({ tsDecorators: true }), crx({ manifest })],
-  define: {
-    'import.meta.vitest': 'undefined',
-  },
   server: {
     strictPort: true,
     port: 5173,
