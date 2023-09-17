@@ -1,54 +1,57 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { vi } from 'vitest';
 
+let dataStore: any = {};
+let listeners: any[] = [];
+
 /**
- * A functional mock of the chrome API for testing purposes. All functions
- * are spied for inspection
+ * Clear internal state of the chrome mock
  */
-export const makeMockChrome = () => {
-  let dataStore: any = {};
-  let listeners: any[] = [];
+export const resetMockChrome = () => {
+  dataStore = {};
+  listeners = [];
+};
 
-  return {
-    storage: {
-      local: {
-        get: vi.fn().mockImplementation((keys: string) => {
-          const result = { [keys]: dataStore[keys] };
-          return result;
-        }),
-        set: vi.fn().mockImplementation((data: Record<string, any>) => {
-          dataStore = { ...dataStore, ...data };
-        }),
+/**
+ * Get internal state of mock chrome for debugging
+ */
+export const debugMockChrome = () => {
+  return { dataStore, listeners };
+};
+
+/**
+ * A functional mock of the chrome API for testing purposes
+ */
+export const mockChrome = {
+  storage: {
+    local: {
+      get: (keys: string) => {
+        const result = { [keys]: dataStore[keys] };
+        return result;
       },
-      onChanged: {
-        addListener: vi
-          .fn()
-          .mockImplementation(
-            (
-              listener: (changes: Record<string, any>, areaName: string) => void
-            ) => {
-              listeners.push(listener);
-            }
-          ),
-
-        removeListener: vi
-          .fn()
-          .mockImplementation(
-            (
-              listener: (changes: Record<string, any>, areaName: string) => void
-            ) => {
-              const index = listeners.indexOf(listener);
-              if (index !== -1) {
-                listeners.splice(index, 1);
-              }
-            }
-          ),
+      set: (data: Record<string, any>) => {
+        dataStore = { ...dataStore, ...data };
+        listeners.forEach((listener) => {
+          console.log('DEBUG 0');
+          listener(dataStore);
+        });
       },
     },
+    onChanged: {
+      addListener: (
+        listener: (changes: Record<string, any>, areaName: string) => void
+      ) => {
+        listeners.push(listener);
+      },
 
-    reset: function () {
-      dataStore = {};
-      listeners = [];
+      removeListener: (
+        listener: (changes: Record<string, any>, areaName: string) => void
+      ) => {
+        const index = listeners.indexOf(listener);
+        if (index !== -1) {
+          listeners.splice(index, 1);
+        }
+      },
     },
-  };
+  },
 };
