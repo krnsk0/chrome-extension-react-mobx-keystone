@@ -4,20 +4,31 @@ import { makeLogger } from './makeLogger';
 
 describe('createLogger', () => {
   const oldConsoleLog = console.log;
+  const oldConsoleWarn = console.warn;
+  const oldConsoleError = console.error;
+  const oldConsoleInfo = console.info;
   beforeEach(() => {
     console.log = vi.fn();
+    console.error = vi.fn();
+    console.warn = vi.fn();
+    console.info = vi.fn();
   });
   afterEach(() => {
     console.log = oldConsoleLog;
+    console.error = oldConsoleError;
+    console.warn = oldConsoleWarn;
+    console.info = oldConsoleInfo;
   });
 
-  it('should create a logger with a prefix', () => {
-    const logger = makeLogger('test');
-    logger.log('hello');
-    logger.log('world');
-    expect(console.log).toHaveBeenCalledWith('[test]', 'hello');
-    expect(console.log).toHaveBeenCalledWith('[test]', 'world');
-  });
+  it.each(['log', 'error', 'warn', 'info'])(
+    `should create a logger with a prefix for log %s`,
+    (method: string) => {
+      const methodName = method as 'log' | 'error' | 'warn' | 'info';
+      const logger = makeLogger('test');
+      logger[methodName]('hello');
+      expect(console[methodName]).toHaveBeenCalledWith('[test]', 'hello');
+    }
+  );
 
   it('should allow forking a logger', () => {
     const logger = makeLogger('test');
