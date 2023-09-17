@@ -5,6 +5,7 @@ import { disableLogger } from '../../../testing/disableLogger';
 import { startStoreSync } from './startStoreSync';
 
 // comment out to debug tests
+// eslint-disable-next-line vitest/require-hook
 disableLogger();
 
 /**
@@ -20,7 +21,7 @@ describe('the startStoreSync function', () => {
   it('should apply an empty object snapshot when there is nothing in storage', async () => {
     const root = new TestRoot({});
     await startStoreSync(root);
-    expect(root.testProp).toStrictEqual('default_state');
+    expect(root.testProp).toBe('default_state');
   });
 
   it('should load a snapshot from storage and apply it', async () => {
@@ -32,7 +33,7 @@ describe('the startStoreSync function', () => {
     });
     const root = new TestRoot({});
     await startStoreSync(root);
-    expect(root.testProp).toStrictEqual('loaded_from_storage');
+    expect(root.testProp).toBe('loaded_from_storage');
   });
 
   it('should gracefully handle an invalid snapshot, skipping any application', async () => {
@@ -44,7 +45,7 @@ describe('the startStoreSync function', () => {
     });
     const root = new TestRoot({});
     await startStoreSync(root);
-    expect(root.testProp).toStrictEqual('default_state');
+    expect(root.testProp).toBe('default_state');
   });
 
   it('should, when snapshot is missing, create one and save it', async () => {
@@ -88,7 +89,7 @@ describe('the startStoreSync function', () => {
         },
       },
     });
-    expect(root.testProp).toStrictEqual('new_value_from_chrome_storage');
+    expect(root.testProp).toBe('new_value_from_chrome_storage');
   });
 
   it('should return a disposer function which, when called, tears down the two-way sync', async () => {
@@ -116,6 +117,6 @@ describe('the startStoreSync function', () => {
         },
       },
     });
-    expect(root.testProp).toStrictEqual('new_value_from_keystone');
+    expect(root.testProp).toBe('new_value_from_keystone');
   });
 });

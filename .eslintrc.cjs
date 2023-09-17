@@ -5,11 +5,17 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
-    'plugin:vitest/all',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh', 'simple-import-sort', 'vitest'],
+  plugins: ['react-refresh', 'simple-import-sort'],
+  overrides: [
+    {
+      files: ['**.test.ts', '**.test.tsx'],
+      plugins: ['vitest'],
+      extends: ['plugin:vitest/recommended'],
+    },
+  ],
   rules: {
     'react-refresh/only-export-components': [
       'warn',
@@ -18,8 +24,5 @@ module.exports = {
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
     'no-console': 'error',
-    'vitest/require-hook': 'off',
-    'vitest/require-top-level-describe': 'off',
-    'vitest/no-hooks': 'off',
   },
 };
