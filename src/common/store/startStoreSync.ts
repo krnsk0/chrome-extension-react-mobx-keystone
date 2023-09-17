@@ -1,14 +1,9 @@
-import {
-  AnyModel,
-  applySnapshot,
-  getSnapshot,
-  onSnapshot,
-} from 'mobx-keystone';
+import { AnyModel, applySnapshot, onSnapshot } from 'mobx-keystone';
 
 import { isObject } from '../utils/isObject';
-import { makeLogger } from '../utils/makeLogger';
+import { Logger, makeLogger } from '../utils/makeLogger';
 
-const MOBX_KEYSTONE_KEY = '_mobx_keystone_snapshot';
+const MOBX_KEYSTONE_KEY = '__mobx_keystone_snapshot';
 
 const logger = makeLogger('storage');
 
@@ -26,7 +21,6 @@ const readStorage = async (): Promise<unknown> => {
   const storageValue = (await chrome.storage.local.get([
     MOBX_KEYSTONE_KEY,
   ])) as unknown;
-  console.log('storageValue: ', storageValue);
   if (isObject(storageValue) && MOBX_KEYSTONE_KEY in storageValue) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newRoot = (storageValue as any)[MOBX_KEYSTONE_KEY];
@@ -36,6 +30,23 @@ const readStorage = async (): Promise<unknown> => {
       .fork('readStorage')
       .log('no MOBX_KEYSTONE_KEY in storage, returning empty object');
     return {};
+  }
+};
+
+/**
+ * Helper to apply a snapshot to a model, logging any errors
+ */
+const safeApplySnapshot = (
+  root: AnyModel,
+  snapshot: unknown,
+  logger: Logger
+) => {
+  const childLogger = logger.fork('safeApplySnapshot');
+  try {
+    applySnapshot(root, snapshot);
+    childLogger.log('snapshot applied', snapshot);
+  } catch (error: unknown) {
+    childLogger.error('snapshot application failed', snapshot);
   }
 };
 
@@ -51,12 +62,7 @@ export const startStoreSync = async (root: AnyModel): Promise<() => void> => {
    */
   childLogger.log('starting sync');
   const initialValue = await readStorage();
-  try {
-    applySnapshot(root, initialValue as AnyModel);
-    childLogger.log('store after initialization', getSnapshot(root));
-  } catch (error: unknown) {
-    childLogger.log('store after initialization', getSnapshot(root));
-  }
+  safeApplySnapshot(root, initialValue, childLogger);
 
   /**
    * Set up syncing keystone store back to chrome storage

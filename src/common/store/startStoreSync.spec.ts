@@ -20,7 +20,7 @@ describe('The startStoreSync function', () => {
 
   it('should load a snapshot from storage and apply it', async () => {
     (chrome.storage.local.get as Mock).mockReturnValueOnce({
-      _mobx_keystone_snapshot: {
+      __mobx_keystone_snapshot: {
         testProp: 'loaded_from_storage',
         $modelType: 'testRoot',
       },
@@ -30,21 +30,52 @@ describe('The startStoreSync function', () => {
     expect(root.testProp).toEqual('loaded_from_storage');
   });
 
-  it('should gracefully handle an invalid snapshot', async () => {
+  it('should gracefully handle an invalid snapshot, skipping any application', async () => {
     (chrome.storage.local.get as Mock).mockReturnValueOnce({
-      _mobx_keystone_snapshot: {
+      __mobx_keystone_snapshot: {
         testProp: 'loaded_from_storage',
         $modelType: 'notRealModel',
       },
     });
     const root = new TestRoot({});
     await startStoreSync(root);
-    expect(root.testProp).toEqual('loaded_from_storage');
+    expect(root.testProp).toEqual('default_state');
   });
 
-  it('should sync keystone store changes back to the chrome store', () => {});
+  it('should sync keystone store changes back to the chrome store', async () => {
+    const root = new TestRoot({});
+    await startStoreSync(root);
+    root.setTestProp('new_value_from_keystone');
+    expect(chrome.storage.local.set).toHaveBeenCalledWith({
+      __mobx_keystone_snapshot: {
+        testProp: 'new_value_from_keystone',
+        $modelType: 'testRoot',
+      },
+    });
+  });
 
-  it('should sync chrome store stages back to the keystone store', () => {});
+  it('should sync chrome store changes back to the keystone store', async () => {
+    const root = new TestRoot({});
+    await startStoreSync(root);
+    const handleStorageUpdate = (chrome.storage.onChanged.addListener as Mock)
+      .mock.calls[0][0];
+    console.log('addListener: ', handleStorageUpdate);
+    handleStorageUpdate({
+      __mobx_keystone_snapshot: {
+        newValue: {
+          testProp: 'new_value_from_chrome_storage',
+          $modelType: 'testRoot',
+        },
+      },
+    });
+    expect(root.testProp).toEqual('new_value_from_chrome_storage');
+  });
 
-  it('should return a disposer function which, when called, tears down the two-way sync', () => {});
+  it('should return a disposer function which, when called, tears down the two-way sync', async () => {
+    // const root = new TestRoot({});
+    // const disposer = await startStoreSync(root);
+    // disposer();
+    // expect(onSnapshot(root)).toHaveLength(0);
+    // expect(chrome.storage.onChanged.removeListener).toHaveBeenCalled();
+  });
 });
