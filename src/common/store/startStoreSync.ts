@@ -8,7 +8,7 @@ import {
 import { isObject } from '../utils/isObject';
 import { makeLogger } from '../utils/makeLogger';
 
-const MOBX_KEYSTONE_KEY = '__msks';
+const MOBX_KEYSTONE_KEY = '_mobx_keystone_snapshot';
 
 const logger = makeLogger('storage');
 
@@ -26,6 +26,7 @@ const readStorage = async (): Promise<unknown> => {
   const storageValue = (await chrome.storage.local.get([
     MOBX_KEYSTONE_KEY,
   ])) as unknown;
+  console.log('storageValue: ', storageValue);
   if (isObject(storageValue) && MOBX_KEYSTONE_KEY in storageValue) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newRoot = (storageValue as any)[MOBX_KEYSTONE_KEY];
@@ -50,8 +51,12 @@ export const startStoreSync = async (root: AnyModel): Promise<() => void> => {
    */
   childLogger.log('starting sync');
   const initialValue = await readStorage();
-  applySnapshot(root, initialValue as AnyModel);
-  childLogger.log('store after initialization', getSnapshot(root));
+  try {
+    applySnapshot(root, initialValue as AnyModel);
+    childLogger.log('store after initialization', getSnapshot(root));
+  } catch (error: unknown) {
+    childLogger.log('store after initialization', getSnapshot(root));
+  }
 
   /**
    * Set up syncing keystone store back to chrome storage
