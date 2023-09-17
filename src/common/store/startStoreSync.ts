@@ -1,33 +1,39 @@
-import { applySnapshot, getSnapshot, onSnapshot } from 'mobx-keystone';
+import {
+  AnyModel,
+  applySnapshot,
+  getSnapshot,
+  onSnapshot,
+} from 'mobx-keystone';
 
 import { isObject } from '../utils/isObject';
 import { makeLogger } from '../utils/makeLogger';
-import { Root } from './root';
 
-const ROOT_KEY = 'ROOT_KEY';
+const MOBX_KEYSTONE_KEY = '__msks';
 
 const logger = makeLogger('storage');
 
 /**
- * Helper to write to chrome storage at ROOT_KEY
+ * Helper to write to chrome storage at MOBX_KEYSTONE_KEY
  */
 const writeStorage = async (newState: unknown) => {
-  return chrome.storage.local.set({ [ROOT_KEY]: newState });
+  return chrome.storage.local.set({ [MOBX_KEYSTONE_KEY]: newState });
 };
 
 /**
- * Helper to read from chome storage at ROOT_KEY
+ * Helper to read from chome storage at MOBX_KEYSTONE_KEY
  */
 const readStorage = async (): Promise<unknown> => {
-  const storageValue = (await chrome.storage.local.get([ROOT_KEY])) as unknown;
-  if (isObject(storageValue) && ROOT_KEY in storageValue) {
+  const storageValue = (await chrome.storage.local.get([
+    MOBX_KEYSTONE_KEY,
+  ])) as unknown;
+  if (isObject(storageValue) && MOBX_KEYSTONE_KEY in storageValue) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const newRoot = (storageValue as any)[ROOT_KEY];
+    const newRoot = (storageValue as any)[MOBX_KEYSTONE_KEY];
     return newRoot;
   } else {
     logger
       .fork('readStorage')
-      .log('no ROOT_KEY in storage, returning empty object');
+      .log('no MOBX_KEYSTONE_KEY in storage, returning empty object');
     return {};
   }
 };
@@ -36,22 +42,32 @@ const readStorage = async (): Promise<unknown> => {
  * Syncs the store with chrome storage. Will fetch from storage on startup and
  * resync immediately before setting up two-way subscriptions
  */
-export const startStoreSync = async (root: Root): Promise<() => void> => {
+export const startStoreSync = async (root: AnyModel): Promise<() => void> => {
   const childLogger = logger.fork('startStoreSync');
+
+  /**
+   * Fetch initial state from store
+   */
   childLogger.log('starting sync');
   const initialValue = await readStorage();
-  applySnapshot(root, initialValue as Root);
+  applySnapshot(root, initialValue as AnyModel);
   childLogger.log('store after initialization', getSnapshot(root));
 
+  /**
+   * Set up syncing keystone store back to chrome storage
+   */
   const disposer = onSnapshot(root, (snapshot) => {
     childLogger.fork('startStoreSync').log('keystone -> storage', snapshot);
     writeStorage(snapshot);
   });
 
+  /**
+   * Set up chrome storage to keystone store
+   */
   const handleStorageUpdate = (changes: {
     [key: string]: chrome.storage.StorageChange;
   }) => {
-    const newSnapshot = changes[ROOT_KEY].newValue;
+    const newSnapshot = changes[MOBX_KEYSTONE_KEY].newValue;
     childLogger
       .fork('handleStorageUpdate')
       .log('storage -> keystone', newSnapshot);
