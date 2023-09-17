@@ -1,17 +1,17 @@
 import { observer } from 'mobx-react-lite';
-import './App.css'
 import { useStore } from '../common/store/useStore';
-
+import './App.css';
 
 const App = observer(() => {
   const root = useStore();
 
-
   return (
     <div>
-      <button onClick={() => root.toggleActivation()}>{root.displayableState}</button>
+      <button onClick={() => root.toggleActivation()}>
+        {root.displayableState}
+      </button>
     </div>
-  )
-})
+  );
+});
 
-export default App
+export default App;

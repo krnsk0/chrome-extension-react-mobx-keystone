@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, Mock } from 'vitest';
-import StoreProvider, { StoreContext } from './storeProvider';
 import { render } from '@testing-library/react';
-import { Root } from './root';
 import { assertIsTreeNode, isRoot } from 'mobx-keystone';
-import { startStoreSync } from './startStoreSync';
+import { Mock, describe, expect, it, vi } from 'vitest';
 import { nextTick } from '../../../testing/nextTick';
+import { Root } from './root';
+import { startStoreSync } from './startStoreSync';
+import StoreProvider, { StoreContext } from './storeProvider';
 
 vi.mock('./startStoreSync', async () => {
   const original = await vi.importActual<{

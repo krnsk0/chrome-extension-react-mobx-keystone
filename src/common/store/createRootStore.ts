@@ -1,9 +1,9 @@
 import {
   ModelAutoTypeCheckingMode,
+  registerRootStore,
   setGlobalConfig,
 } from 'mobx-keystone';
-import { registerRootStore } from "mobx-keystone";
-import { Root } from "./root";
+import { Root } from './root';
 
 /**
  * Create new mobx keystone store, expose it to the window for development
@@ -16,11 +16,10 @@ export function createRootStore() {
   const root = new Root({});
   registerRootStore(root);
 
-
   if (import.meta.env.DEV) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any)._keystone_root = root;
   }
 
-  return root
+  return root;
 }

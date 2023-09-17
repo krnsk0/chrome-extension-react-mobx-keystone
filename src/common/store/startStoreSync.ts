@@ -1,7 +1,7 @@
 import { applySnapshot, getSnapshot, onSnapshot } from 'mobx-keystone';
-import { Root } from './root';
 import { isObject } from '../utils/isObject';
 import { makeLogger } from '../utils/makeLogger';
+import { Root } from './root';
 
 const ROOT_KEY = 'ROOT_KEY';
 

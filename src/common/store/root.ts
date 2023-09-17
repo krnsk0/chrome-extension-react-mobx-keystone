@@ -1,6 +1,6 @@
-import { model, Model, modelAction, tProp, types } from 'mobx-keystone';
 import { computed } from 'mobx';
-import {assertUnreachable} from '../utils/assertUnreachable';
+import { model, Model, modelAction, tProp, types } from 'mobx-keystone';
+import { assertUnreachable } from '../utils/assertUnreachable';
 
 export enum CompressorStates {
   DISABLED = 'DISABLED',
@@ -8,8 +8,6 @@ export enum CompressorStates {
   ACTIVE = 'ACTIVE',
   FAILED = 'FAILED',
 }
-
-
 
 @model('Root')
 export class Root extends Model({

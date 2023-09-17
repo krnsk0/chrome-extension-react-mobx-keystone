@@ -1,4 +1,3 @@
-
 export const makeLogger = (prefix: string) => {
   return {
     log: (...args: unknown[]) => {
