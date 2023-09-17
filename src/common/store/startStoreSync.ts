@@ -1,16 +1,22 @@
 import { applySnapshot, getSnapshot, onSnapshot } from 'mobx-keystone';
-import { Root } from './store/root';
-import { isObject } from './utils/isObject';
-import { makeLogger } from './utils/makeLogger';
+import { Root } from './root';
+import { isObject } from '../utils/isObject';
+import { makeLogger } from '../utils/makeLogger';
 
 const ROOT_KEY = 'ROOT_KEY';
 
 const logger = makeLogger('storage');
 
+/**
+ * Helper to write to chrome storage at ROOT_KEY
+ */
 const writeStorage = async (newState: unknown) => {
   return chrome.storage.local.set({ [ROOT_KEY]: newState });
 };
 
+/**
+ * Helper to read from chome storage at ROOT_KEY
+ */
 const readStorage = async (): Promise<unknown> => {
   const storageValue = (await chrome.storage.local.get([ROOT_KEY])) as unknown;
   if (isObject(storageValue) && ROOT_KEY in storageValue) {
@@ -23,6 +29,10 @@ const readStorage = async (): Promise<unknown> => {
   }
 };
 
+/**
+ * Syncs the store with chrome storage. Will fetch from storage on startup and
+ * resync immediately before setting up two-way subscriptions
+ */
 export const startStoreSync = async (root: Root): Promise<() => void> => {
   const childLogger = logger.fork('startStoreSync');
   childLogger.log('starting sync')

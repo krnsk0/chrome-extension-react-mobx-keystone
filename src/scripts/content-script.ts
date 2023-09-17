@@ -1,18 +1,16 @@
-import { CompressorStates, Root } from '../common/store/root';
+import { CompressorStates } from '../common/store/root';
 import { reaction } from 'mobx';
 import { assertUnreachable } from '../common/utils/assertUnreachable';
-import { startStoreSync } from '../common/storage';
+import { startStoreSync } from '../common/store/startStoreSync';
 import { makeLogger } from '../common/utils/makeLogger';
+import { createRootStore } from '../common/store/createRootStore';
 
 const logger = makeLogger('content-script');
 logger.log('starting')
 
-const root = new Root({});
+const root = createRootStore();
 
 (async () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any)._keystone_root = root;
-
   await startStoreSync(root);
 
   const reactionLogger = logger.fork('reaction');
