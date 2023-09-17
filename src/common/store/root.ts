@@ -1,5 +1,6 @@
 import { computed } from 'mobx';
-import { model, Model, modelAction, tProp, types } from 'mobx-keystone';
+import { Model, model, modelAction, tProp, types } from 'mobx-keystone';
+
 import { assertUnreachable } from '../utils/assertUnreachable';
 
 export enum CompressorStates {

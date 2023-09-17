@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import { assertIsTreeNode, isRoot } from 'mobx-keystone';
-import { Mock, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, Mock, vi } from 'vitest';
+
 import { nextTick } from '../../../testing/nextTick';
 import { Root } from './root';
 import { startStoreSync } from './startStoreSync';

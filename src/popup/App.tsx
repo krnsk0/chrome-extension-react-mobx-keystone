@@ -1,7 +1,8 @@
-import { observer } from 'mobx-react-lite';
-import { useStore } from '../common/store/useStore';
 import './App.css';
 
+import { observer } from 'mobx-react-lite';
+
+import { useStore } from '../common/store/useStore';
 const App = observer(() => {
   const root = useStore();
 

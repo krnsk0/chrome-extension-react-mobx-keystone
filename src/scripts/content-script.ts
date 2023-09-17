@@ -1,9 +1,10 @@
-import { CompressorStates } from '../common/store/root';
 import { reaction } from 'mobx';
-import { assertUnreachable } from '../common/utils/assertUnreachable';
-import { startStoreSync } from '../common/store/startStoreSync';
-import { makeLogger } from '../common/utils/makeLogger';
+
 import { createRootStore } from '../common/store/createRootStore';
+import { CompressorStates } from '../common/store/root';
+import { startStoreSync } from '../common/store/startStoreSync';
+import { assertUnreachable } from '../common/utils/assertUnreachable';
+import { makeLogger } from '../common/utils/makeLogger';
 
 const logger = makeLogger('content-script');
 logger.log('starting')

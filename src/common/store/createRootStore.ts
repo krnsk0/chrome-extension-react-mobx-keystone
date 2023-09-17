@@ -3,6 +3,7 @@ import {
   registerRootStore,
   setGlobalConfig,
 } from 'mobx-keystone';
+
 import { Root } from './root';
 
 /**

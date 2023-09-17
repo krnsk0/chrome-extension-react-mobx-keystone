@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { makeLogger } from './makeLogger';
 
 describe('createLogger', () => {

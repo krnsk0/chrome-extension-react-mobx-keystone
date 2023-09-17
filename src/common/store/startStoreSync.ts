@@ -1,4 +1,5 @@
 import { applySnapshot, getSnapshot, onSnapshot } from 'mobx-keystone';
+
 import { isObject } from '../utils/isObject';
 import { makeLogger } from '../utils/makeLogger';
 import { Root } from './root';
