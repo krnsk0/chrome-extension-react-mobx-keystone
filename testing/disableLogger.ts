@@ -1,4 +1,3 @@
- 
 import { afterAll, beforeAll } from 'vitest';
 
 import { pauseLogger, resumeLogger } from '../src/common/utils/makeLogger';

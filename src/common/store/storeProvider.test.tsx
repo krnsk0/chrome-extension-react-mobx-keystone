@@ -30,13 +30,11 @@ describe('the StoreProvide', () => {
       </StoreProvider>
     );
     expect(store).toBeDefined();
-    if (store) {
-      expect(() => assertIsTreeNode(store)).not.toThrow();
-      expect(isRoot(store)).toBeTruthy();
-    }
+    expect(() => assertIsTreeNode(store)).not.toThrow();
+    expect(isRoot(store!)).toBeTruthy();
   });
 
-  it.only('should clean up the store sync when the component is unmounted', async () => {
+  it('should clean up the store sync when the component is unmounted', async () => {
     const cleanup = vi.fn();
     (startStoreSync as Mock).mockImplementation(async () => {
       return cleanup;

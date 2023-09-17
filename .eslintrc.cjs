@@ -18,5 +18,8 @@ module.exports = {
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
     'no-console': 'error',
+    'vitest/require-hook': 'off',
+    'vitest/require-top-level-describe': 'off',
+    'vitest/no-hooks': 'off',
   },
 };

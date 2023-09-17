@@ -20,7 +20,7 @@ describe('the startStoreSync function', () => {
   it('should apply an empty object snapshot when there is nothing in storage', async () => {
     const root = new TestRoot({});
     await startStoreSync(root);
-    expect(root.testProp).toEqual('default_state');
+    expect(root.testProp).toStrictEqual('default_state');
   });
 
   it('should load a snapshot from storage and apply it', async () => {
@@ -32,7 +32,7 @@ describe('the startStoreSync function', () => {
     });
     const root = new TestRoot({});
     await startStoreSync(root);
-    expect(root.testProp).toEqual('loaded_from_storage');
+    expect(root.testProp).toStrictEqual('loaded_from_storage');
   });
 
   it('should gracefully handle an invalid snapshot, skipping any application', async () => {
@@ -44,7 +44,7 @@ describe('the startStoreSync function', () => {
     });
     const root = new TestRoot({});
     await startStoreSync(root);
-    expect(root.testProp).toEqual('default_state');
+    expect(root.testProp).toStrictEqual('default_state');
   });
 
   it('should, when snapshot is missing, create one and save it', async () => {
@@ -53,7 +53,9 @@ describe('the startStoreSync function', () => {
     });
     const root = new TestRoot({});
     await startStoreSync(root);
-    expect(chrome.storage.local.get(['__mobx_keystone_snapshot'])).toEqual({
+    expect(
+      chrome.storage.local.get(['__mobx_keystone_snapshot'])
+    ).toStrictEqual({
       __mobx_keystone_snapshot: {
         testProp: 'default_state',
         $modelType: 'testRoot',
@@ -65,7 +67,9 @@ describe('the startStoreSync function', () => {
     const root = new TestRoot({});
     await startStoreSync(root);
     root.setTestProp('new_value_from_keystone');
-    expect(chrome.storage.local.get(['__mobx_keystone_snapshot'])).toEqual({
+    expect(
+      chrome.storage.local.get(['__mobx_keystone_snapshot'])
+    ).toStrictEqual({
       __mobx_keystone_snapshot: {
         testProp: 'new_value_from_keystone',
         $modelType: 'testRoot',
@@ -84,7 +88,7 @@ describe('the startStoreSync function', () => {
         },
       },
     });
-    expect(root.testProp).toEqual('new_value_from_chrome_storage');
+    expect(root.testProp).toStrictEqual('new_value_from_chrome_storage');
   });
 
   it('should return a disposer function which, when called, tears down the two-way sync', async () => {
@@ -94,7 +98,9 @@ describe('the startStoreSync function', () => {
 
     // updates to store should not be reflected in storage
     root.setTestProp('new_value_from_keystone');
-    expect(chrome.storage.local.get(['__mobx_keystone_snapshot'])).toEqual({
+    expect(
+      chrome.storage.local.get(['__mobx_keystone_snapshot'])
+    ).toStrictEqual({
       __mobx_keystone_snapshot: {
         testProp: 'default_state',
         $modelType: 'testRoot',
@@ -110,6 +116,6 @@ describe('the startStoreSync function', () => {
         },
       },
     });
-    expect(root.testProp).toEqual('new_value_from_keystone');
+    expect(root.testProp).toStrictEqual('new_value_from_keystone');
   });
 });
