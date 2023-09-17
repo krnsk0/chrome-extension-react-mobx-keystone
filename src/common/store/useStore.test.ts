@@ -8,6 +8,6 @@ describe('useStore', () => {
   it('should return the root store', () => {
     const { result } = renderHook(() => useStore());
 
-    expect(isRoot(result.current)).toBe(true);
+    expect(isRoot(result.current)).toBeTruthy();
   });
 });

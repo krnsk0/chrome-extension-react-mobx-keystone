@@ -1,24 +1,15 @@
 /* eslint-disable no-console */
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { makeLogger, pauseLogger, resumeLogger } from './makeLogger';
 
 describe('createLogger', () => {
-  const oldConsoleLog = console.log;
-  const oldConsoleWarn = console.warn;
-  const oldConsoleError = console.error;
-  const oldConsoleInfo = console.info;
   beforeEach(() => {
-    console.log = vi.fn();
-    console.error = vi.fn();
-    console.warn = vi.fn();
-    console.info = vi.fn();
-  });
-  afterEach(() => {
-    console.log = oldConsoleLog;
-    console.error = oldConsoleError;
-    console.warn = oldConsoleWarn;
-    console.info = oldConsoleInfo;
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.spyOn(console, 'info').mockImplementation(() => {});
   });
 
   it.each(['log', 'error', 'warn', 'info'])(
