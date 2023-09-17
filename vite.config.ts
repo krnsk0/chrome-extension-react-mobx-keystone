@@ -16,13 +16,14 @@ export default defineConfig({
     },
   },
   test: {
-    includeSource: ['src/**/*.{js,ts}'],
     environment: 'jsdom',
     setupFiles: ['./testing/setup.ts'],
     globals: true,
     coverage: {
       provider: 'v8',
-      clean: true,
+      extension: ['js', 'ts', 'tsx'],
+      all: true,
+      include: ['src/**/*.ts', 'src/**/*.tsx'],
     },
   },
 });
