@@ -1,8 +1,7 @@
-
 import React, { useEffect } from 'react';
 import { Root } from './root';
 import { startStoreSync } from './startStoreSync';
-import { createRootStore } from './createRootStore'
+import { createRootStore } from './createRootStore';
 
 const root = createRootStore();
 
@@ -10,13 +9,16 @@ export const StoreContext = React.createContext<Root>(root);
 
 const useSyncStore = (root: Root) => {
   useEffect(() => {
-    let cleanup: () => void = () => {};
+    let cleanup: Awaited<ReturnType<typeof startStoreSync>> | undefined =
+      undefined;
     (async () => {
       cleanup = await startStoreSync(root);
     })();
-    return cleanup;
+    return () => {
+      cleanup?.();
+    };
   }, [root]);
-}
+};
 
 const StoreProvider = ({
   children,
