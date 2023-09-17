@@ -7,7 +7,7 @@ import { assertUnreachable } from '../common/utils/assertUnreachable';
 import { makeLogger } from '../common/utils/makeLogger';
 
 const logger = makeLogger('content-script');
-logger.log('starting')
+logger.log('starting');
 
 const root = createRootStore();
 
@@ -23,7 +23,7 @@ const root = createRootStore();
           reactionLogger.log('disabling compressor');
           break;
         case CompressorStates.ENABLING:
-          reactionLogger.log('enabling compressor')
+          reactionLogger.log('enabling compressor');
           setTimeout(() => {
             root.compressorActivated();
           }, 2000);
@@ -32,7 +32,7 @@ const root = createRootStore();
           reactionLogger.log('compressor activated');
           break;
         case CompressorStates.FAILED:
-          reactionLogger.log('compressor failed')
+          reactionLogger.log('compressor failed');
           break;
         default:
           assertUnreachable(compressorState);

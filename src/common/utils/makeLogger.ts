@@ -14,6 +14,7 @@ const invokeLogger =
   (methodName: 'log' | 'error' | 'warn' | 'info', prefix: string) =>
   (...args: unknown[]) => {
     if (import.meta.env.DEV && !temporaryDisableLogger) {
+      // eslint-disable-next-line no-console
       console[methodName](`[${prefix}]`, ...args);
     }
   };

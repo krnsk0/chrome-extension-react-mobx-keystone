@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { vi } from 'vitest';
 
 let dataStore: any = {};
 let listeners: any[] = [];

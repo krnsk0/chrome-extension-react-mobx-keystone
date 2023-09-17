@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { makeLogger, pauseLogger, resumeLogger } from './makeLogger';
