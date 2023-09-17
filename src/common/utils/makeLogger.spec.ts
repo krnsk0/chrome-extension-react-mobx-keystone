@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { makeLogger } from './makeLogger';
+import { makeLogger, pauseLogger, resumeLogger } from './makeLogger';
 
 describe('createLogger', () => {
   const oldConsoleLog = console.log;
@@ -46,5 +46,15 @@ describe('createLogger', () => {
     logger.log('hello');
     expect(console.log).not.toHaveBeenCalled();
     import.meta.env.DEV = oldDev;
+  });
+
+  it('should not log when temporarily disabled', () => {
+    const logger = makeLogger('test');
+    pauseLogger();
+    logger.log('hello');
+    expect(console.log).not.toHaveBeenCalled();
+    resumeLogger();
+    logger.log('hi');
+    expect(console.log).toHaveBeenCalledWith('[test]', 'hi');
   });
 });

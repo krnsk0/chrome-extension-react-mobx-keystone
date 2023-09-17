@@ -1,11 +1,11 @@
 import { Model, model, tProp, types } from 'mobx-keystone';
 import { describe, expect, it } from 'vitest';
 
-import { disableConsole } from '../../../testing/disableConsole';
+import { disableLogger } from '../../../testing/disableLogger';
 import { startStoreSync } from './startStoreSync';
 
 // comment out to debug tests
-disableConsole();
+disableLogger();
 
 /**
  * Small fake test model useful for decoupling these tests from
