@@ -1,4 +1,9 @@
-import { AnyModel, applySnapshot, onSnapshot } from 'mobx-keystone';
+import {
+  AnyModel,
+  applySnapshot,
+  getSnapshot,
+  onSnapshot,
+} from 'mobx-keystone';
 
 import { isObject } from '../utils/isObject';
 import { Logger, makeLogger } from '../utils/makeLogger';
@@ -11,6 +16,7 @@ const logger = makeLogger('storage');
  * Helper to write to chrome storage at MOBX_KEYSTONE_KEY
  */
 const writeStorage = async (newState: unknown) => {
+  logger.fork('writeStorage').log(newState);
   return chrome.storage.local.set({ [MOBX_KEYSTONE_KEY]: newState });
 };
 
@@ -21,10 +27,13 @@ const readStorage = async (): Promise<unknown> => {
   const storageValue = (await chrome.storage.local.get([
     MOBX_KEYSTONE_KEY,
   ])) as unknown;
-  if (isObject(storageValue) && MOBX_KEYSTONE_KEY in storageValue) {
+  if (
+    isObject(storageValue) &&
+    MOBX_KEYSTONE_KEY in storageValue &&
+    isObject(storageValue[MOBX_KEYSTONE_KEY])
+  ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const newRoot = (storageValue as any)[MOBX_KEYSTONE_KEY];
-    return newRoot;
+    return (storageValue as any)[MOBX_KEYSTONE_KEY];
   } else {
     logger
       .fork('readStorage')
@@ -58,11 +67,13 @@ export const startStoreSync = async (root: AnyModel): Promise<() => void> => {
   const childLogger = logger.fork('startStoreSync');
 
   /**
-   * Fetch initial state from store
+   * Fetch initial state from store and write back immediately
+   * The immediate writeback handles cases where no store exists
    */
   childLogger.log('starting sync');
   const initialValue = await readStorage();
   safeApplySnapshot(root, initialValue, childLogger);
+  await writeStorage(getSnapshot(root));
 
   /**
    * Set up syncing keystone store back to chrome storage
@@ -82,7 +93,7 @@ export const startStoreSync = async (root: AnyModel): Promise<() => void> => {
     childLogger
       .fork('handleStorageUpdate')
       .log('storage -> keystone', newSnapshot);
-    applySnapshot(root, newSnapshot);
+    safeApplySnapshot(root, newSnapshot, childLogger);
   };
   chrome.storage.onChanged.addListener(handleStorageUpdate);
 

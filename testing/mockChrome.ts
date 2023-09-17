@@ -32,7 +32,6 @@ export const mockChrome = {
       set: (data: Record<string, any>) => {
         dataStore = { ...dataStore, ...data };
         listeners.forEach((listener) => {
-          console.log('DEBUG 0');
           listener(dataStore);
         });
       },
