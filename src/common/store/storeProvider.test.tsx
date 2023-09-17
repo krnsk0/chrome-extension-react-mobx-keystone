@@ -32,7 +32,7 @@ describe('the StoreProvide', () => {
     expect(store).toBeDefined();
     if (store) {
       expect(() => assertIsTreeNode(store)).not.toThrow();
-      expect(isRoot(store)).toBe(true);
+      expect(isRoot(store)).toBeTruthy();
     }
   });
 
@@ -50,6 +50,6 @@ describe('the StoreProvide', () => {
     // need to wait for effect to run
     await nextTick();
     unmount();
-    expect(cleanup).toHaveBeenCalled();
+    expect(cleanup).toHaveBeenCalledWith();
   });
 });

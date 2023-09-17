@@ -16,7 +16,7 @@ class TestRoot extends Model({
   testProp: tProp(types.string, 'default_state').withSetter(),
 }) {}
 
-describe('The startStoreSync function', () => {
+describe('the startStoreSync function', () => {
   it('should apply an empty object snapshot when there is nothing in storage', async () => {
     const root = new TestRoot({});
     await startStoreSync(root);
