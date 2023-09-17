@@ -22,7 +22,6 @@ export default defineConfig({
     globals: true,
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
       clean: true,
       cleanOnRerun: true,
     },
