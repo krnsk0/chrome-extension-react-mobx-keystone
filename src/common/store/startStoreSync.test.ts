@@ -5,7 +5,6 @@ import { disableLogger } from '../../../testing/disableLogger';
 import { startStoreSync } from './startStoreSync';
 
 // comment out to debug tests
-// eslint-disable-next-line vitest/require-hook
 disableLogger();
 
 /**
