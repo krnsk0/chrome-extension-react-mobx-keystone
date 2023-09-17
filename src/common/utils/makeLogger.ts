@@ -1,3 +1,5 @@
+export type Logger = ReturnType<typeof makeLogger>;
+
 const invokeLogger =
   (methodName: 'log' | 'error' | 'warn' | 'info', prefix: string) =>
   (...args: unknown[]) => {
