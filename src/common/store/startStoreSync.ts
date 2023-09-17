@@ -24,7 +24,9 @@ const readStorage = async (): Promise<unknown> => {
     const newRoot = (storageValue as any)[ROOT_KEY];
     return newRoot;
   } else {
-    logger.fork('readStorage').log('no ROOT_KEY in storage, returning empty object');
+    logger
+      .fork('readStorage')
+      .log('no ROOT_KEY in storage, returning empty object');
     return {};
   }
 };
@@ -35,7 +37,7 @@ const readStorage = async (): Promise<unknown> => {
  */
 export const startStoreSync = async (root: Root): Promise<() => void> => {
   const childLogger = logger.fork('startStoreSync');
-  childLogger.log('starting sync')
+  childLogger.log('starting sync');
   const initialValue = await readStorage();
   applySnapshot(root, initialValue as Root);
   childLogger.log('store after initialization', getSnapshot(root));
@@ -49,7 +51,9 @@ export const startStoreSync = async (root: Root): Promise<() => void> => {
     [key: string]: chrome.storage.StorageChange;
   }) => {
     const newSnapshot = changes[ROOT_KEY].newValue;
-    childLogger.fork('handleStorageUpdate').log('storage -> keystone', newSnapshot);
+    childLogger
+      .fork('handleStorageUpdate')
+      .log('storage -> keystone', newSnapshot);
     applySnapshot(root, newSnapshot);
   };
   chrome.storage.onChanged.addListener(handleStorageUpdate);
