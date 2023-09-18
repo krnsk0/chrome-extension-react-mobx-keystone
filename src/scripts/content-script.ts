@@ -13,6 +13,7 @@ const root = createRootStore();
 
 (async () => {
   await startStoreSync(root);
+  root.markLoadComplete();
 
   // const reactionLogger = logger.fork('reaction');
   // reaction(

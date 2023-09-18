@@ -19,7 +19,7 @@ describe('the root model', () => {
       loaded = root.doneLoadingFromStorage;
     });
     expect(loaded).toBe(false);
-    root.markLoadedComplete();
+    root.markLoadComplete();
     expect(loaded).toBe(true);
   });
 });

@@ -15,7 +15,7 @@ export class Root extends Model({}) {
    * be used to e.g. show a loading spinner
    */
   @action.bound
-  markLoadedComplete() {
+  markLoadComplete() {
     this.doneLoadingFromStorage = true;
   }
 }

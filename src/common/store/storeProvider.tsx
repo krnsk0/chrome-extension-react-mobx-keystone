@@ -14,6 +14,7 @@ const useSyncStore = (root: Root) => {
       undefined;
     (async () => {
       cleanup = await startStoreSync(root);
+      root.markLoadComplete();
     })();
     return () => {
       cleanup?.();
