@@ -22,6 +22,9 @@ const useSyncStore = (root: Root) => {
   }, [root]);
 };
 
+/**
+ * We allow injecting a store for testing
+ */
 const StoreProvider = ({
   children,
 }: React.PropsWithChildren<Record<string, unknown>>) => {
