@@ -7,11 +7,10 @@ import { startStoreSync } from '../common/store/startStoreSync';
 import { makeLogger } from '../common/utils/makeLogger';
 
 const logger = makeLogger('content-script');
-logger.log('starting');
-
-const store = createStore();
+logger.log('starting content script');
 
 (async () => {
+  const store = createStore();
   await startStoreSync(store);
   store.markLoadComplete();
 
