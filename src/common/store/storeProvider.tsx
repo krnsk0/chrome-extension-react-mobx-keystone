@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { createRootStore } from './createRootStore';
-import { Root } from './root';
+import { Root } from './models/root';
 import { startStoreSync } from './startStoreSync';
 
 const root = createRootStore();

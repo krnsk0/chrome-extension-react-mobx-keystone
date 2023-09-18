@@ -4,7 +4,7 @@ import {
   setGlobalConfig,
 } from 'mobx-keystone';
 
-import { Root } from './root';
+import { Root } from './models/root';
 
 /**
  * Create new mobx keystone store, expose it to the window for development

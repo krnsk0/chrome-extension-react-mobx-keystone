@@ -3,7 +3,7 @@ import { assertIsTreeNode, isRoot } from 'mobx-keystone';
 import { describe, expect, it, Mock, vi } from 'vitest';
 
 import { nextTick } from '../../../testing/nextTick';
-import { Root } from './root';
+import { Root } from './models/root';
 import { startStoreSync } from './startStoreSync';
 import StoreProvider, { StoreContext } from './storeProvider';
 

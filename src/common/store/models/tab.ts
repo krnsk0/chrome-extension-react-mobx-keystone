@@ -1,7 +1,7 @@
 import { computed } from 'mobx';
 import { Model, model, modelAction, tProp, types } from 'mobx-keystone';
 
-import { assertUnreachable } from '../utils/assertUnreachable';
+import { assertUnreachable } from '../../utils/assertUnreachable';
 
 export enum CompressorStates {
   DISABLED = 'DISABLED',
@@ -10,8 +10,8 @@ export enum CompressorStates {
   FAILED = 'FAILED',
 }
 
-@model('Root')
-export class Root extends Model({
+@model('Tab')
+export class Tab extends Model({
   compressorState: tProp(
     types.enum(CompressorStates),
     CompressorStates.DISABLED
