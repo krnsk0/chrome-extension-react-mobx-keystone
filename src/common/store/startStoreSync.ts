@@ -46,13 +46,13 @@ const readStorage = async (): Promise<unknown> => {
  * Helper to apply a snapshot to a model, logging any errors
  */
 const safeApplySnapshot = (
-  root: AnyModel,
+  store: AnyModel,
   snapshot: unknown,
   logger: Logger
 ) => {
   const childLogger = logger.fork('safeApplySnapshot');
   try {
-    applySnapshot(root, snapshot);
+    applySnapshot(store, snapshot);
     childLogger.log('snapshot applied', snapshot);
   } catch (error: unknown) {
     childLogger.error('snapshot application failed', snapshot);
@@ -63,7 +63,7 @@ const safeApplySnapshot = (
  * Syncs the store with chrome storage. Will fetch from storage on startup and
  * resync immediately before setting up two-way subscriptions
  */
-export const startStoreSync = async (root: AnyModel): Promise<() => void> => {
+export const startStoreSync = async (store: AnyModel): Promise<() => void> => {
   const childLogger = logger.fork('startStoreSync');
 
   /**
@@ -72,13 +72,13 @@ export const startStoreSync = async (root: AnyModel): Promise<() => void> => {
    */
   childLogger.log('starting sync');
   const initialValue = await readStorage();
-  safeApplySnapshot(root, initialValue, childLogger);
-  await writeStorage(getSnapshot(root));
+  safeApplySnapshot(store, initialValue, childLogger);
+  await writeStorage(getSnapshot(store));
 
   /**
    * Set up syncing keystone store back to chrome storage
    */
-  const disposer = onSnapshot(root, (snapshot) => {
+  const disposer = onSnapshot(store, (snapshot) => {
     childLogger.fork('startStoreSync').log('keystone -> storage', snapshot);
     writeStorage(snapshot);
   });
@@ -93,7 +93,7 @@ export const startStoreSync = async (root: AnyModel): Promise<() => void> => {
     childLogger
       .fork('handleStorageUpdate')
       .log('storage -> keystone', newSnapshot);
-    safeApplySnapshot(root, newSnapshot, childLogger);
+    safeApplySnapshot(store, newSnapshot, childLogger);
   };
   chrome.storage.onChanged.addListener(handleStorageUpdate);
 

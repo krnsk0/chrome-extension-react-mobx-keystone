@@ -11,8 +11,8 @@ describe('the App component', () => {
     expect(() => customRender(<App />)).not.toThrow();
   });
 
-  it('should initially display a loading message', () => {
-    const { getByTestId } = customRender(<App />);
+  it('should tear down loading message', () => {
+    const { getByTestId, store } = customRender(<App />);
     expect(getByTestId('loading')).toBeTruthy();
   });
 });

@@ -2,25 +2,28 @@ import {
   ModelAutoTypeCheckingMode,
   registerRootStore,
   setGlobalConfig,
+  SnapshotInOf,
 } from 'mobx-keystone';
 
 import { Root } from './models/root';
 
 /**
  * Create new mobx keystone store, expose it to the window for development
+ *
+ * Allows injecting a snapshot for testing
  */
-export function createRootStore() {
+export function createStore(snapshot?: SnapshotInOf<Root>) {
   setGlobalConfig({
     modelAutoTypeChecking: ModelAutoTypeCheckingMode.AlwaysOn,
     showDuplicateModelNameWarnings: true,
   });
-  const root = new Root({});
-  registerRootStore(root);
+  const store = new Root(snapshot ?? {});
+  registerRootStore(store);
 
   if (import.meta.env.DEV) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any)._keystone_root = root;
+    (window as any)._keystone_store = store;
   }
 
-  return root;
+  return store;
 }

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 
-import { createRootStore } from './createRootStore';
+import { createStore } from './createRootStore';
 import { Root } from './models/root';
 import { startStoreSync } from './startStoreSync';
 
-const root = createRootStore();
+const root = createStore();
 
 export const StoreContext = React.createContext<Root>(root);
 
@@ -22,12 +22,7 @@ const useSyncStore = (root: Root) => {
   }, [root]);
 };
 
-/**
- * We allow injecting a store for testing
- */
-const StoreProvider = ({
-  children,
-}: React.PropsWithChildren<Record<string, unknown>>) => {
+const StoreProvider = ({ children }: React.PropsWithChildren) => {
   useSyncStore(root);
   return <StoreContext.Provider value={root}>{children}</StoreContext.Provider>;
 };

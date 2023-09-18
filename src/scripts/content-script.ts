@@ -1,6 +1,6 @@
 // import { reaction } from 'mobx';
 
-import { createRootStore } from '../common/store/createRootStore';
+import { createStore } from '../common/store/createRootStore';
 // import { CompressorStates } from '../common/store/models/root';
 import { startStoreSync } from '../common/store/startStoreSync';
 // import { assertUnreachable } from '../common/utils/assertUnreachable';
@@ -9,7 +9,7 @@ import { makeLogger } from '../common/utils/makeLogger';
 const logger = makeLogger('content-script');
 logger.log('starting');
 
-const root = createRootStore();
+const root = createStore();
 
 (async () => {
   await startStoreSync(root);

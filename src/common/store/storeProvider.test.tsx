@@ -17,21 +17,21 @@ vi.mock('./startStoreSync', async () => {
 });
 
 describe('the StoreProvider', () => {
-  it('should pass an instance of the root store down to child components', () => {
-    let store: Root | undefined = undefined;
+  it('should pass an instance of the store down to child components', () => {
+    let storeRef: Root | undefined = undefined;
     render(
       <StoreProvider>
         <StoreContext.Consumer>
-          {(root) => {
-            store = root;
+          {(store) => {
+            storeRef = store;
             return <></>;
           }}
         </StoreContext.Consumer>
       </StoreProvider>
     );
-    expect(store).toBeDefined();
-    expect(() => assertIsTreeNode(store)).not.toThrow();
-    expect(isRoot(store!)).toBeTruthy();
+    expect(storeRef).toBeDefined();
+    expect(() => assertIsTreeNode(storeRef)).not.toThrow();
+    expect(isRoot(storeRef!)).toBeTruthy();
   });
 
   /**
@@ -56,18 +56,18 @@ describe('the StoreProvider', () => {
   });
 
   it('should mark the store as having been fully loaded once it has been', async () => {
-    let store: Root | undefined = undefined;
+    let storeRef: Root | undefined = undefined;
     render(
       <StoreProvider>
         <StoreContext.Consumer>
-          {(root) => {
-            store = root;
+          {(store) => {
+            storeRef = store;
             return <></>;
           }}
         </StoreContext.Consumer>
       </StoreProvider>
     );
     await nextTick();
-    expect(store!.isLoading).toBeFalsy();
+    expect(storeRef!.isLoading).toBeFalsy();
   });
 });
