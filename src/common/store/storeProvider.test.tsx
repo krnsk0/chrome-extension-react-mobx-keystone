@@ -16,7 +16,7 @@ vi.mock('./startStoreSync', async () => {
   };
 });
 
-describe('the StoreProvide', () => {
+describe('the StoreProvider', () => {
   it('should pass an instance of the root store down to child components', () => {
     let store: Root | undefined = undefined;
     render(
