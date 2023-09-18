@@ -5,9 +5,9 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '../common/store/useStore';
 
 const App = observer(() => {
-  const root = useStore();
+  const store = useStore();
 
-  if (root.isLoading) {
+  if (store.isLoading) {
     return <div data-testid="loading">loading...</div>;
   }
 

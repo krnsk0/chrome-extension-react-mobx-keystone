@@ -9,11 +9,11 @@ import { makeLogger } from '../common/utils/makeLogger';
 const logger = makeLogger('content-script');
 logger.log('starting');
 
-const root = createStore();
+const store = createStore();
 
 (async () => {
-  await startStoreSync(root);
-  root.markLoadComplete();
+  await startStoreSync(store);
+  store.markLoadComplete();
 
   // const reactionLogger = logger.fork('reaction');
   // reaction(
