@@ -1,21 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 let dataStore: any = {};
-let listeners: any[] = [];
+let storageListeners: any[] = [];
+let runtimeMessageListeners: any[] = [];
+let tabId = '';
 
-/**
- * Clear internal state of the chrome mock
- */
-export const resetMockChrome = () => {
-  dataStore = {};
-  listeners = [];
-};
-
-/**
- * Get internal state of mock chrome for debugging
- */
-export const debugMockChrome = () => {
-  return { dataStore, listeners };
+export const chromeDebug = {
+  /**
+   * Clear internal state of the chrome mock
+   */
+  resetMockChrome: () => {
+    dataStore = {};
+    storageListeners = [];
+    runtimeMessageListeners = [];
+    tabId = '';
+  },
+  /**
+   * Get internal state of mock chrome for debugging
+   */
+  getInternals: () => {
+    return { dataStore, storageListeners, runtimeMessageListeners };
+  },
+  /**
+   * Set the tab ID returned in messages
+   */
+  setTabId: (newTabId: any) => {
+    tabId = newTabId;
+  },
 };
 
 /**
@@ -30,7 +41,7 @@ export const mockChrome = {
       },
       set: (data: Record<string, any>) => {
         dataStore = { ...dataStore, ...data };
-        listeners.forEach((listener) => {
+        storageListeners.forEach((listener) => {
           listener(dataStore);
         });
       },
@@ -39,16 +50,31 @@ export const mockChrome = {
       addListener: (
         listener: (changes: Record<string, any>, areaName: string) => void
       ) => {
-        listeners.push(listener);
+        storageListeners.push(listener);
       },
 
       removeListener: (
         listener: (changes: Record<string, any>, areaName: string) => void
       ) => {
-        const index = listeners.indexOf(listener);
+        const index = storageListeners.indexOf(listener);
         if (index !== -1) {
-          listeners.splice(index, 1);
+          storageListeners.splice(index, 1);
         }
+      },
+    },
+  },
+  runtime: {
+    sendMessage: (
+      message: any,
+      callback: (response: any) => void | undefined
+    ) => {
+      runtimeMessageListeners.forEach((listener) => {
+        listener(message, { tab: { id: tabId } }, callback);
+      });
+    },
+    onMessage: {
+      addListener: (listener: any) => {
+        runtimeMessageListeners.push(listener);
       },
     },
   },

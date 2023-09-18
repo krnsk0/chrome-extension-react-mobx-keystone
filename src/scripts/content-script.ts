@@ -5,6 +5,7 @@ import { createStore } from '../common/store/createRootStore';
 import { startStoreSync } from '../common/store/startStoreSync';
 // import { assertUnreachable } from '../common/utils/assertUnreachable';
 import { makeLogger } from '../common/utils/makeLogger';
+import { queryTabId } from '../common/utils/tabId';
 
 const logger = makeLogger('content-script');
 logger.log('starting content script');
@@ -13,6 +14,9 @@ logger.log('starting content script');
   const store = createStore();
   await startStoreSync(store);
   store.markLoadComplete();
+
+  const tabId = await queryTabId();
+  console.log('tabId: ', tabId);
 
   // const reactionLogger = logger.fork('reaction');
   // reaction(

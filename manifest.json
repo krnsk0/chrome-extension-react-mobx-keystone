@@ -9,5 +9,9 @@
       "matches": ["*://*/*"]
     }
   ],
+  "background": {
+    "service_worker": "src/scripts/service-worker.ts",
+    "type": "module"
+  },
   "permissions": ["storage"]
 }
