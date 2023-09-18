@@ -14,12 +14,12 @@ describe('the root model', () => {
    */
   it('should allow the caller to observe the load state of the model', () => {
     const root = new Root({});
-    let loaded = false;
-    observe(root, 'doneLoadingFromStorage', () => {
-      loaded = root.doneLoadingFromStorage;
+    let loaded = true;
+    observe(root, 'isLoading', () => {
+      loaded = root.isLoading;
     });
-    expect(loaded).toBe(false);
-    root.markLoadComplete();
     expect(loaded).toBe(true);
+    root.markLoadComplete();
+    expect(loaded).toBe(false);
   });
 });

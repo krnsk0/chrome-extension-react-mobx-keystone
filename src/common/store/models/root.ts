@@ -7,7 +7,7 @@ export class Root extends Model({}) {
    * This property intentionally not serialized
    */
   @observable
-  doneLoadingFromStorage = false;
+  isLoading = true;
 
   /**
    * Indicate that finished loading from a snapshot when one exists; when
@@ -16,6 +16,6 @@ export class Root extends Model({}) {
    */
   @action.bound
   markLoadComplete() {
-    this.doneLoadingFromStorage = true;
+    this.isLoading = false;
   }
 }

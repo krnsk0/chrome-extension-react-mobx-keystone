@@ -40,7 +40,7 @@ describe('the StoreProvide', () => {
    */
   it('should clean up the store sync when the component is unmounted', async () => {
     const cleanup = vi.fn();
-    (startStoreSync as Mock).mockImplementation(async () => {
+    (startStoreSync as Mock).mockImplementationOnce(async () => {
       return cleanup;
     });
 
@@ -53,5 +53,21 @@ describe('the StoreProvide', () => {
     await nextTick();
     unmount();
     expect(cleanup).toHaveBeenCalledWith();
+  });
+
+  it('should mark the store as having been fully loaded once it has been', async () => {
+    let store: Root | undefined = undefined;
+    render(
+      <StoreProvider>
+        <StoreContext.Consumer>
+          {(root) => {
+            store = root;
+            return <></>;
+          }}
+        </StoreContext.Consumer>
+      </StoreProvider>
+    );
+    await nextTick();
+    expect(store!.isLoading).toBeFalsy();
   });
 });
