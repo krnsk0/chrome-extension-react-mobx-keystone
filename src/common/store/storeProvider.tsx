@@ -4,27 +4,29 @@ import { createStore } from './createRootStore';
 import { Root } from './models/root';
 import { startStoreSync } from './startStoreSync';
 
-const root = createStore();
+const store = createStore();
 
-export const StoreContext = React.createContext<Root>(root);
+export const StoreContext = React.createContext<Root>(store);
 
-const useSyncStore = (root: Root) => {
+const useSyncStore = (store: Root) => {
   useEffect(() => {
     let cleanup: Awaited<ReturnType<typeof startStoreSync>> | undefined =
       undefined;
     (async () => {
-      cleanup = await startStoreSync(root);
-      root.markLoadComplete();
+      cleanup = await startStoreSync(store);
+      store.markLoadComplete();
     })();
     return () => {
       cleanup?.();
     };
-  }, [root]);
+  }, [store]);
 };
 
 const StoreProvider = ({ children }: React.PropsWithChildren) => {
-  useSyncStore(root);
-  return <StoreContext.Provider value={root}>{children}</StoreContext.Provider>;
+  useSyncStore(store);
+  return (
+    <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
+  );
 };
 
 export default StoreProvider;

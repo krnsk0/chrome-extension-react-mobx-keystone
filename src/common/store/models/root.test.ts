@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { Root } from './root';
 
-describe('the root model', () => {
+describe('the root store model', () => {
   it('should initialize from an empty snapshot without throwing', () => {
     expect(() => new Root({})).not.toThrow();
   });
@@ -13,13 +13,13 @@ describe('the root model', () => {
    * and we need to be able to e.g. show a loading spinner while we wait for this
    */
   it('should allow the caller to observe the load state of the model', () => {
-    const root = new Root({});
+    const store = new Root({});
     let loaded = true;
-    observe(root, 'isLoading', () => {
-      loaded = root.isLoading;
+    observe(store, 'isLoading', () => {
+      loaded = store.isLoading;
     });
     expect(loaded).toBe(true);
-    root.markLoadComplete();
+    store.markLoadComplete();
     expect(loaded).toBe(false);
   });
 });
