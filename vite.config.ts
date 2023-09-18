@@ -24,6 +24,7 @@ export default defineConfig({
       extension: ['js', 'ts', 'tsx'],
       all: true,
       include: ['src/**/*.ts', 'src/**/*.tsx'],
+      exclude: ['src/popup/main.tsx', '**/**.d.ts'],
     },
   },
 });
