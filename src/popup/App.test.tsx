@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { customRender } from '../../testing/customRender';
+import { disableLogger } from '../../testing/disableLogger';
 import App from './App';
+
+disableLogger();
 
 describe('the App component', () => {
   it('should render without erroring', () => {
