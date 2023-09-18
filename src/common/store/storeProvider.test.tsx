@@ -34,6 +34,10 @@ describe('the StoreProvide', () => {
     expect(isRoot(store!)).toBeTruthy();
   });
 
+  /**
+   * We mock here only to slightly decouple from the implementation of startStoreSync
+   * which should be well-tested on its own
+   */
   it('should clean up the store sync when the component is unmounted', async () => {
     const cleanup = vi.fn();
     (startStoreSync as Mock).mockImplementation(async () => {
