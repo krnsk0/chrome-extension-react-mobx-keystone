@@ -1,5 +1,5 @@
 {
-  "name": "volume-leveler-extension",
+  "name": "chrome-extension-react-mobx-keystone",
   "private": true,
   "version": "0.0.0",
   "type": "module",
