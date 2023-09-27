@@ -1,4 +1,5 @@
 import {
+  fromSnapshot,
   ModelAutoTypeCheckingMode,
   registerRootStore,
   setGlobalConfig,
@@ -17,7 +18,7 @@ export function createStore(snapshot?: SnapshotInOf<Root>) {
     modelAutoTypeChecking: ModelAutoTypeCheckingMode.AlwaysOn,
     showDuplicateModelNameWarnings: true,
   });
-  const store = new Root(snapshot ?? {});
+  const store = snapshot ? fromSnapshot(snapshot) : new Root({});
   registerRootStore(store);
 
   if (import.meta.env.DEV) {
