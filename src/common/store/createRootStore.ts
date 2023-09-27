@@ -18,7 +18,7 @@ export function createStore(snapshot?: SnapshotInOf<Root>) {
     modelAutoTypeChecking: ModelAutoTypeCheckingMode.AlwaysOn,
     showDuplicateModelNameWarnings: true,
   });
-  const store = snapshot ? fromSnapshot(snapshot) : new Root({});
+  const store = snapshot ? fromSnapshot<Root>(snapshot) : new Root({});
   registerRootStore(store);
 
   if (import.meta.env.DEV) {
